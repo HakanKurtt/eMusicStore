@@ -9,12 +9,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
+import javax.servlet.http.*;
 
 @Controller
 public class HomeController {
+
+
+    private Path path;
 
     @Autowired
     private ProductDao productDao;
@@ -72,11 +81,35 @@ public class HomeController {
     }
 
     @RequestMapping(value="/admin/productInventory/addProduct", method= RequestMethod.POST)
-    public String addProductPost(@ModelAttribute("product") Product product){
+    public String addProductPost(@ModelAttribute("product") Product product, HttpServletRequest request){
         productDao.addProduct(product);
+
+        MultipartFile productImage = product.getProductImage();
+        //Proje yolunu kaydediyoruz.
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        //resim icin isim olusturup kaydedileceği path'i belirliyoruz.
+        path = Paths.get(rootDirectory+ "\\WEB-INF\\resources\\images\\"+product.getProductId()+".png");
+
+        //Eger productImage bos veya null degilse tipini png'ye donustur ardından olusturulan path ve isimle kaydet.
+        if(productImage != null && !productImage.isEmpty()){
+            try{
+                productImage.transferTo(new File(path.toString()));
+            }catch(Exception e){
+                e.printStackTrace();
+                throw new RuntimeException("Product image saving failed.");
+            }
+        }
 
         //redirect, springe gönderilenin bir string değil bir path olduğunu söyler.
         return "redirect:/admin/productInventory";
 
+    }
+
+    @RequestMapping("/admin/productInventory/deleteProduct/{productId}")
+    public String deleteProduct(@PathVariable String productId, Model model) {
+
+        productDao.deleteProduct(productId);
+
+        return "redirect:/admin/productInventory";
     }
 }
