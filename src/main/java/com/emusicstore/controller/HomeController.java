@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -105,8 +106,54 @@ public class HomeController {
 
     }
 
+
+    @RequestMapping("/admin/productInventory/updateProduct/{productId}")
+    public String updateProduct(@PathVariable String productId, Model model){
+        Product product = productDao.getProductById(productId);
+
+        model.addAttribute(product);
+
+        return "updateProduct";
+
+    }
+
+    @RequestMapping(value = "/admin/productInventory/updateProduct", method = RequestMethod.POST)
+    public String updateProductPost(@ModelAttribute("product") Product product, HttpServletRequest request){
+
+
+
+        MultipartFile productImage = product.getProductImage();
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        path  = Paths.get(rootDirectory+"\\WEB-INF\\resources\\images\\"+product.getProductId()+".png");
+
+        if(productImage != null && !productImage.isEmpty()){
+            try{
+                productImage.transferTo(new File(path.toString()));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        productDao.updateProduct(product);
+
+        return "redirect:/admin/productInventory";
+    }
+
     @RequestMapping("/admin/productInventory/deleteProduct/{productId}")
-    public String deleteProduct(@PathVariable String productId, Model model) {
+    public String deleteProduct(@PathVariable String productId, Model model, HttpServletRequest request) {
+
+        //Proje yolunu kaydediyoruz.
+        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
+        //resim icin isim olusturup kaydedileceği path'i belirliyoruz.
+        path = Paths.get(rootDirectory+ "\\WEB-INF\\resources\\images\\"+productId+".png");
+
+        if(Files.exists(path)){
+            try{
+                Files.delete(path);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 
         productDao.deleteProduct(productId);
 
