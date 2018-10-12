@@ -5,6 +5,7 @@ import com.emusicstore.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import javax.servlet.http.*;
+import javax.validation.Valid;
 
 @Controller
 public class HomeController {
@@ -82,7 +84,13 @@ public class HomeController {
     }
 
     @RequestMapping(value="/admin/productInventory/addProduct", method= RequestMethod.POST)
-    public String addProductPost(@ModelAttribute("product") Product product, HttpServletRequest request){
+    public String addProductPost(@Valid @ModelAttribute("product") Product product, BindingResult result, HttpServletRequest request){
+
+        if(result.hasErrors()){
+            System.out.println(result.hasErrors());
+            return "addProduct";
+        }
+
         productDao.addProduct(product);
 
         MultipartFile productImage = product.getProductImage();
@@ -118,9 +126,11 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/admin/productInventory/updateProduct", method = RequestMethod.POST)
-    public String updateProductPost(@ModelAttribute("product") Product product, HttpServletRequest request){
+    public String updateProductPost(@Valid @ModelAttribute("product") Product product, BindingResult result,HttpServletRequest request){
 
-
+        if(result.hasErrors()){
+            return "updateProduct";
+        }
 
         MultipartFile productImage = product.getProductImage();
         String rootDirectory = request.getSession().getServletContext().getRealPath("/");

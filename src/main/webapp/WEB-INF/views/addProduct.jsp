@@ -29,7 +29,7 @@
                    method="POST" modelAttribute="product" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Name</label>
-            <form:input path="productName" id="name" class="form-Control" />
+            <form:input path="productName" id="name" class="form-Control" /><form:errors path="productName" cssStyle="color:#ff0000"/>
         </div>
 
         <div class="form-group">
@@ -52,7 +52,7 @@
 
         <div class="form-group">
             <label for="description">Price</label>
-            <form:input path="productPrice" id="price" class="form-Control"/>
+            <form:input path="productPrice" id="price" class="form-Control"/><form:errors path="productPrice" cssStyle="color:#ff0000"/>
         </div>
 
 
@@ -78,7 +78,7 @@
 
         <div class="form-group">
             <label for="unitInStock">Unit In Stock</label>
-            <form:input path="unitInStock" id="unitInStock" class="form-Control"/>
+            <form:input path="unitInStock" id="unitInStock" class="form-Control"/><form:errors path="unitInStock" cssStyle="color:#ff0000"/>
         </div>
 
         <div class="form-group">
