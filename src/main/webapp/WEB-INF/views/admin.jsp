@@ -18,7 +18,11 @@
         <div class="page-header">
             <h1>Administrator Page</h1>
 
-            <p1 class="lead">Welcome Admin!</p1>
+            <c:if test="${pageContext.request.userPrincipal.name != null}">
+                <h2>
+                    Welcome ${pageContext.request.userPrincipal.name} | <a href="<c:url value='/j_spring_security_logout'/>">Logout</a>
+                </h2>
+            </c:if>
         </div>
 
         <h3>

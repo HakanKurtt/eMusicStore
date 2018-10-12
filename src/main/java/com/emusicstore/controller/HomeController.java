@@ -26,7 +26,7 @@ import javax.validation.Valid;
 public class HomeController {
 
 
-    private Path path;
+
 
     @Autowired
     private ProductDao productDao;
@@ -55,118 +55,5 @@ public class HomeController {
         return "viewProduct";
     }
 
-    @RequestMapping("/admin")
-    public String adminPage(){
 
-        return "admin";
-    }
-
-    @RequestMapping("/admin/productInventory")
-    public String productInventory(Model model){
-        List<Product> products = productDao.getAllProducts();
-        model.addAttribute("products", products);
-
-        return "productInventory";
-
-    }
-
-    @RequestMapping("/admin/productInventory/addProduct")
-    public String addProduct(Model model){
-        Product product=new Product();
-
-        product.setProductCategory("instrument");
-        product.setProductCondition("new");
-        product.setProductStatus("active");
-
-        model.addAttribute(product);
-
-        return "addProduct";
-    }
-
-    @RequestMapping(value="/admin/productInventory/addProduct", method= RequestMethod.POST)
-    public String addProductPost(@Valid @ModelAttribute("product") Product product, BindingResult result, HttpServletRequest request){
-
-        if(result.hasErrors()){
-            System.out.println(result.hasErrors());
-            return "addProduct";
-        }
-
-        productDao.addProduct(product);
-
-        MultipartFile productImage = product.getProductImage();
-        //Proje yolunu kaydediyoruz.
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        //resim icin isim olusturup kaydedileceği path'i belirliyoruz.
-        path = Paths.get(rootDirectory+ "\\WEB-INF\\resources\\images\\"+product.getProductId()+".png");
-
-        //Eger productImage bos veya null degilse tipini png'ye donustur ardından olusturulan path ve isimle kaydet.
-        if(productImage != null && !productImage.isEmpty()){
-            try{
-                productImage.transferTo(new File(path.toString()));
-            }catch(Exception e){
-                e.printStackTrace();
-                throw new RuntimeException("Product image saving failed.");
-            }
-        }
-
-        //redirect, springe gönderilenin bir string değil bir path olduğunu söyler.
-        return "redirect:/admin/productInventory";
-
-    }
-
-
-    @RequestMapping("/admin/productInventory/updateProduct/{productId}")
-    public String updateProduct(@PathVariable String productId, Model model){
-        Product product = productDao.getProductById(productId);
-
-        model.addAttribute(product);
-
-        return "updateProduct";
-
-    }
-
-    @RequestMapping(value = "/admin/productInventory/updateProduct", method = RequestMethod.POST)
-    public String updateProductPost(@Valid @ModelAttribute("product") Product product, BindingResult result,HttpServletRequest request){
-
-        if(result.hasErrors()){
-            return "updateProduct";
-        }
-
-        MultipartFile productImage = product.getProductImage();
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        path  = Paths.get(rootDirectory+"\\WEB-INF\\resources\\images\\"+product.getProductId()+".png");
-
-        if(productImage != null && !productImage.isEmpty()){
-            try{
-                productImage.transferTo(new File(path.toString()));
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        productDao.updateProduct(product);
-
-        return "redirect:/admin/productInventory";
-    }
-
-    @RequestMapping("/admin/productInventory/deleteProduct/{productId}")
-    public String deleteProduct(@PathVariable String productId, Model model, HttpServletRequest request) {
-
-        //Proje yolunu kaydediyoruz.
-        String rootDirectory = request.getSession().getServletContext().getRealPath("/");
-        //resim icin isim olusturup kaydedileceği path'i belirliyoruz.
-        path = Paths.get(rootDirectory+ "\\WEB-INF\\resources\\images\\"+productId+".png");
-
-        if(Files.exists(path)){
-            try{
-                Files.delete(path);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        productDao.deleteProduct(productId);
-
-        return "redirect:/admin/productInventory";
-    }
 }

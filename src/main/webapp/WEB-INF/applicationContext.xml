@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/cache"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 
-    <!-- First : Defining data source -->
+<!-- First : Defining data source -->
     <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
           destroy-method="close">
 
@@ -45,4 +45,23 @@
         <property name="maxUploadSize" value="1024000" /> <!-- 1MB -->
     </bean>
 
+    <security:http auto-config="true">
+        <security:intercept-url pattern="/admin/**" access="ROLE_USER" />
+        <security:form-login
+                login-page="/login"
+                default-target-url="/admin/"
+                authentication-failure-url="/login?error"
+                username-parameter="username"
+                password-parameter="password" />
+        <security:logout
+                logout-success-url="/login?logout"/>
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:jdbc-user-service data-source-ref="myDataSource"
+                                        authorities-by-username-query="SELECT username, authority FROM authorities WHERE username=?"
+                                        users-by-username-query="SELECT username, password, enabled FROM users WHERE username=?" />
+        </security:authentication-provider>
+    </security:authentication-manager>
 </beans>
