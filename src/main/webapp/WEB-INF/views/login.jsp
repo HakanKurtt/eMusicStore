@@ -10,7 +10,7 @@
 
 
 <div class="container-wrapper">
-    <div class="container">
+    <div class="login-container">
         <div id="login-box">
 
             <h2>Kullanıcı adı ve parola ile giriş yapınız.</h2>
@@ -27,11 +27,11 @@
                     </c:if>
 
                     <label for="username">Kullanıcı: </label>
-                    <input type="text" id="username" name="username" class="form-control">
+                    <input type="text" id="username" name="username" class="form-control" />
                 </div>
                 <div class="form-group">
                     <label for="password">Parola :</label>
-                    <input type="text" id="password" name="password" class="form-control">
+                    <input type="text" id="password" name="password" class="form-control" />
                 </div>
 
                 <input type="submit" value="Submit" class="btn btn-default">
