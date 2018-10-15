@@ -12,10 +12,10 @@ public class CartItem {
 
     }
 
-    public CartItem(Product product, int quantity, double totalPrice){
+    public CartItem(Product product){
         this.product=product;
-        this.quantity=quantity;
-        this.totalPrice=totalPrice;
+        this.quantity=1;
+        this.totalPrice=product.getProductPrice();
     }
 
     public Product getProduct() {

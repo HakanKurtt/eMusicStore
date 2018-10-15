@@ -44,7 +44,7 @@ public class Cart {
         this.grandTotal = grandTotal;
     }
 
-    public void addCart(CartItem item){
+    public void addCartItem(CartItem item){
         String productId = Integer.toString(item.getProduct().getProductId());
 
         if(cartItems.containsKey(productId)){ // Eger sepette bu üründen daha once var ise, var olan ile topla
