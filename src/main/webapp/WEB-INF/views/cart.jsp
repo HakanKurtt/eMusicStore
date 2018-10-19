@@ -1,7 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/views/template/header.jsp"%>
-
+<div id="app">
     <div class="container-wrapper">
         <div class="container">
             <section>
@@ -27,8 +27,8 @@
                         <th>Price</th>
                         <th>Action</th>
                     </tr>
-                    <tr>
-                        <td>productName</td>
+                    <tr v-for="">
+                        <td></td>
                         <td>productPrice</td>
                         <td>quantity</td>
                         <td>totalPrice</td>
@@ -51,6 +51,8 @@
         </div>
 
     </div>
+</div>
+<script src="/resources/js/cart.jsp"></script>
 
 
 <%@include file="/WEB-INF/views/template/footer.jsp"%>

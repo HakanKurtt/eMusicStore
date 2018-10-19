@@ -19,6 +19,10 @@
 
     <title>Müzik Kutusuna Hoşgeldiniz</title>
 
+    <!-- Vue Resource -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
     <!-- Bootstrap core CSS -->
     <link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet">
 
